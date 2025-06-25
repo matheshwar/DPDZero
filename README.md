@@ -19,7 +19,7 @@ docker-compose up -d
 ```
 
 - Access Go service: http://localhost:8080/service1/ping http://localhost:8080/service1/hello
-- Access Python service: http://localhost:8080/service2/  http://localhost:8080/service2/hello
+- Access Python service: http://localhost:8080/service2/ping  http://localhost:8080/service2/hello
 
 ## Health Checks
 http://localhost:8080/nginx-health
