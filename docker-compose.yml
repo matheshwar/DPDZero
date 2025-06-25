@@ -1,0 +1,47 @@
+version: '3.8'
+services:
+  service_1:
+    build: ./service_1
+    container_name: service_1
+    expose:
+      - "8001"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8001/ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - dpdzero
+
+  service_2:
+    build: ./service_2
+    container_name: service_2
+    expose:
+      - "8002"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8002/ping')"]  
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - dpdzero
+
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    ports:
+      - "8080:80"
+    depends_on:
+      service_1:
+        condition: service_healthy
+      service_2:
+        condition: service_healthy
+    volumes:
+      - ./nginx:/etc/nginx
+    networks:
+      - dpdzero
+
+networks:
+  dpdzero:
+    driver: bridge
+    name: dpdzero
